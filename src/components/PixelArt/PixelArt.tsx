@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 
-interface PixelArtProps {
+export interface PixelArtProps {
   image?: File | null // 画像ファイル
   imageUri?: string // 画像のURI
   pixelSize: number // ピクセルのサイズ（大きくするほど荒くなる）
 }
 
-const PixelArt: React.FC<PixelArtProps> = ({ image, imageUri, pixelSize }) => {
+export const PixelArt: React.FC<PixelArtProps> = ({
+  image,
+  imageUri,
+  pixelSize
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
