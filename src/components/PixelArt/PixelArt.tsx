@@ -1,15 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 
 interface PixelArtProps {
-  image: File // 画像ファイル
+  image?: File | null // 画像ファイル
+  imageUri?: string // 画像のURI
   pixelSize: number // ピクセルのサイズ（大きくするほど荒くなる）
 }
 
-const PixelArt: React.FC<PixelArtProps> = ({ image, pixelSize }) => {
+const PixelArt: React.FC<PixelArtProps> = ({ image, imageUri, pixelSize }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (canvasRef.current && image) {
+    if (canvasRef.current && (image || imageUri)) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       const img = new Image()
@@ -38,14 +39,19 @@ const PixelArt: React.FC<PixelArtProps> = ({ image, pixelSize }) => {
         }
       }
 
-      // 画像ファイルを読み込む
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        img.src = e.target?.result as string
+      if (image) {
+        // 画像ファイルを読み込む
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          img.src = e.target?.result as string
+        }
+        reader.readAsDataURL(image)
+      } else if (imageUri) {
+        // 画像URIを直接設定
+        img.src = imageUri
       }
-      reader.readAsDataURL(image)
     }
-  }, [image, pixelSize])
+  }, [image, imageUri, pixelSize])
 
   // 平均色を計算する関数
   function getAverageColor(imageData: ImageData | undefined) {
